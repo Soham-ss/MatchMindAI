@@ -1,16 +1,20 @@
+import os
 import joblib
 import pandas as pd
 import numpy as np
 
-# Load ML Model & Encoders with safety
+# Load ML Model & Encoders using absolute paths for cloud compatibility
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "models"))
+
 try:
-    model = joblib.load("models/match_predictor.pkl")
-    batting_encoder = joblib.load("models/batting_encoder.pkl")
-    bowling_encoder = joblib.load("models/bowling_encoder.pkl")
-    venue_encoder = joblib.load("models/venue_encoder.pkl")
-    toss_winner_encoder = joblib.load("models/toss_winner_encoder.pkl")
-    toss_decision_encoder = joblib.load("models/toss_decision_encoder.pkl")
-    winner_encoder = joblib.load("models/winner_encoder.pkl")
+    model = joblib.load(os.path.join(MODEL_DIR, "match_predictor.pkl"))
+    batting_encoder = joblib.load(os.path.join(MODEL_DIR, "batting_encoder.pkl"))
+    bowling_encoder = joblib.load(os.path.join(MODEL_DIR, "bowling_encoder.pkl"))
+    venue_encoder = joblib.load(os.path.join(MODEL_DIR, "venue_encoder.pkl"))
+    toss_winner_encoder = joblib.load(os.path.join(MODEL_DIR, "toss_winner_encoder.pkl"))
+    toss_decision_encoder = joblib.load(os.path.join(MODEL_DIR, "toss_decision_encoder.pkl"))
+    winner_encoder = joblib.load(os.path.join(MODEL_DIR, "winner_encoder.pkl"))
     HAS_ML_MODEL = True
 except Exception as e:
     print(f"Warning: Could not load trained ML model ({e}). Using simulation mode.")

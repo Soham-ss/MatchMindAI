@@ -11,12 +11,39 @@ import streamlit.components.v1 as components
 # Ensure agents directory is in Python path
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "agents"))
 
+# Default Fallback Dictionaries
+DEFAULT_TEAM_RATINGS = {
+    "Chennai Super Kings": 88,
+    "Mumbai Indians": 87,
+    "Royal Challengers Bengaluru": 85,
+    "Kolkata Knight Riders": 86,
+    "Gujarat Titans": 84,
+    "Rajasthan Royals": 85,
+    "Sunrisers Hyderabad": 84,
+    "Delhi Capitals": 82,
+    "Punjab Kings": 81,
+    "Lucknow Super Giants": 83
+}
+
+DEFAULT_VENUE_PROFILES = {
+    "Wankhede Stadium": {"avg_score": 172, "dew_factor": 0.12},
+    "M. Chinnaswamy Stadium": {"avg_score": 180, "dew_factor": 0.15},
+    "MA Chidambaram Stadium": {"avg_score": 158, "dew_factor": 0.05},
+    "Eden Gardens": {"avg_score": 168, "dew_factor": 0.10},
+    "Narendra Modi Stadium": {"avg_score": 175, "dew_factor": 0.08}
+}
+
 try:
     from master_agent import predict_full_match_agentic, answer_user_chatbot_query
     from monte_carlo_agent import TEAM_RATINGS, VENUE_PROFILES
     from web_search_agent import search_realtime
-except ImportError as e:
-    st.error(f"Error loading agent modules: {e}")
+except Exception as e:
+    TEAM_RATINGS = DEFAULT_TEAM_RATINGS
+    VENUE_PROFILES = DEFAULT_VENUE_PROFILES
+    try:
+        from web_search_agent import search_realtime
+    except Exception:
+        def search_realtime(q, max_results=5): return []
 
 # Page Configuration
 st.set_page_config(
