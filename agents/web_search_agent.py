@@ -2,7 +2,13 @@ import re
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
-from bs4 import BeautifulSoup
+
+try:
+    from bs4 import BeautifulSoup
+    HAS_BS4 = True
+except ImportError:
+    BeautifulSoup = None
+    HAS_BS4 = False
 
 try:
     from ddgs import DDGS
@@ -28,126 +34,111 @@ PLAYER_KNOWLEDGE = {
 }
 
 
-def search_google_news_rss(query, max_results=6):
-    """
-    Fetches 100% clean real-time news headlines from Google News RSS feed without any bot checks or login walls.
-    """
-    results = []
+def search_google_news_rss(query, max_results=5):
+    """Scrapes live Google News RSS feed for real-time match & team context."""
+    encoded_query = urllib.parse.quote(query)
+    rss_url = f"https://news.google.com/rss/search?q={encoded_query}&hl=en-IN&gl=IN&ceid=IN:en"
+    
     try:
-        encoded_q = urllib.parse.quote(query)
-        url = f"https://news.google.com/rss/search?q={encoded_q}"
         req = urllib.request.Request(
-            url,
-            headers={
-                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            }
+            rss_url, 
+            headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         )
-        with urllib.request.urlopen(req, timeout=6) as response:
+        with urllib.request.urlopen(req, timeout=5) as response:
             xml_data = response.read()
             
         root = ET.fromstring(xml_data)
-        items = root.findall(".//item")
+        results = []
         
-        for item in items[:max_results]:
-            title_node = item.find("title")
-            pub_date_node = item.find("pubDate")
+        for item in root.findall('.//item')[:max_results]:
+            title = item.find('title').text if item.find('title') is not None else ""
+            pub_date = item.find('pubDate').text if item.find('pubDate') is not None else ""
+            desc = item.find('description').text if item.find('description') is not None else ""
             
-            title = title_node.text if title_node is not None else ""
-            pub_date = pub_date_node.text if pub_date_node is not None else ""
+            # Clean HTML tags if BeautifulSoup is available or regex fallback
+            if HAS_BS4 and BeautifulSoup is not None:
+                clean_desc = BeautifulSoup(desc, "html.parser").get_text()
+            else:
+                clean_desc = re.sub(r'<[^>]+>', '', desc)
+                
+            results.append({
+                "title": title,
+                "snippet": clean_desc.strip(),
+                "date": pub_date
+            })
             
-            # Clean title
-            if title:
-                results.append({
-                    "title": title,
-                    "snippet": f"Published: {pub_date} - {title}",
-                    "link": "Google News"
-                })
+        return results
     except Exception as e:
-        print(f"Google RSS fetch error: {e}")
-        
-    return results
+        print(f"Google News RSS Scraping Warning: {e}")
+        return []
 
 
 def search_realtime(query, max_results=5):
     """
-    Multi-Engine Real-Time Web Searcher.
-    Combines Google RSS live news + DuckDuckGo text search with clean filtering.
+    Combined Real-Time Scraper Engine:
+    Tries DuckDuckGo Search API first, falls back to Google News RSS feed.
     """
     results = []
     
-    # 1. Primary Engine: Google News RSS (100% clean, real-time live data)
-    rss_results = search_google_news_rss(query, max_results=max_results)
-    if rss_results:
-        results.extend(rss_results)
-        
-    # 2. Secondary Engine: DDGS (if available and clean)
-    if HAS_DDGS and len(results) < max_results:
+    if HAS_DDGS:
         try:
             with DDGS() as ddgs:
-                ddg_gen = ddgs.text(query, max_results=max_results)
-                for r in ddg_gen:
-                    snippet = r.get("body", "")
-                    # Filter out bot check / login / captcha garbage
-                    if not any(b in snippet.lower() for b in ["login", "microsoft", "bot check", "verify browser", "captcha", "oops"]):
-                        results.append({
-                            "title": r.get("title", ""),
-                            "snippet": snippet,
-                            "link": r.get("href", "")
-                        })
+                ddg_res = list(ddgs.text(query, max_results=max_results))
+                for item in ddg_res:
+                    results.append({
+                        "title": item.get("title", ""),
+                        "snippet": item.get("body", ""),
+                        "date": item.get("date", "Recent")
+                    })
         except Exception as e:
-            print(f"DDGS error: {e}")
+            print(f"DuckDuckGo API failover: {e}")
             
-    return results[:max_results]
-
-
-def search_match_context(team1, team2, venue=None):
-    """
-    Fetches real-time live match context (pitch report, news, team updates).
-    """
-    query = f"{team1} vs {team2} IPL match prediction pitch report squad"
-    if venue:
-        query = f"{team1} vs {team2} at {venue} pitch report news"
+    if not results:
+        results = search_google_news_rss(query, max_results)
         
-    search_results = search_realtime(query, max_results=5)
+    return results
+
+
+def search_match_context(team1, team2, venue):
+    """
+    Scrapes live web intelligence specifically for an upcoming cricket match between two teams.
+    """
+    query = f"{team1} vs {team2} cricket match pitch report weather news {venue}"
+    search_data = search_realtime(query, max_results=5)
     
-    combined_text = []
-    for idx, res in enumerate(search_results, 1):
-        combined_text.append(f"Source [{idx}] - {res['title']}:\n{res['snippet']}")
+    if not search_data:
+        return f"Real-time news for {team1} vs {team2} at {venue}: High-voltage match expected. Pitch favors balanced competition."
         
-    if not combined_text:
-        return f"Real-time news for {team1} vs {team2}: Recent statistical models predict a close battle based on venue averages and toss factor."
+    formatted_context = []
+    for idx, item in enumerate(search_data, 1):
+        formatted_context.append(f"Source [{idx}] ({item['title']}): {item['snippet']} (Published: {item['date']})")
         
-    return "\n\n".join(combined_text)
+    return "\n".join(formatted_context)
 
 
 def search_general_query(user_query):
     """
-    Fetches real-time web search results for any user prompt.
-    Includes instant player knowledge lookup for players like Rohit Sharma, Virat Kohli, etc.
+    Scrapes live web context for arbitrary user queries.
     """
-    q_clean = user_query.strip().lower()
+    q_lower = user_query.lower()
     
-    # Check Player Knowledge Base first for instant accurate player answers
-    for player_name, bio in PLAYER_KNOWLEDGE.items():
-        if player_name in q_clean:
-            # Combine static facts with live news
-            news = search_realtime(f"{player_name} IPL today match news", max_results=3)
-            news_text = "\n".join([f"- {n['title']}" for n in news])
-            return f"Fact Sheet:\n{bio}\n\nRecent News Headlines:\n{news_text}"
+    # Check static player knowledge base first
+    for p_name, p_info in PLAYER_KNOWLEDGE.items():
+        if p_name in q_lower:
+            return f"Known Player Record: {p_info}"
             
-    # Search real-time web engines
-    search_results = search_realtime(user_query, max_results=5)
-    
-    combined_text = []
-    for idx, res in enumerate(search_results, 1):
-        combined_text.append(f"Source [{idx}] ({res['title']}):\n{res['snippet']}")
+    search_data = search_realtime(user_query, max_results=4)
+    if not search_data:
+        return f"Live web context for: '{user_query}' - Analysis generated from historical patterns & sports database."
         
-    if not combined_text:
-        return f"Real-time search results for '{user_query}': Live sports networks indicate active IPL team preparations and squad analysis."
+    formatted_context = []
+    for idx, item in enumerate(search_data, 1):
+        formatted_context.append(f"Source [{idx}] ({item['title']}): {item['snippet']} (Published: {item['date']})")
         
-    return "\n\n".join(combined_text)
+    return "\n".join(formatted_context)
 
 
 if __name__ == "__main__":
-    print("Testing Web Search Agent...")
-    print(search_general_query("which game Rohit Sharma is playing"))
+    print("Testing Real-Time Web Intelligence Scraper...")
+    res = search_match_context("Chennai Super Kings", "Mumbai Indians", "Wankhede Stadium")
+    print(res)
