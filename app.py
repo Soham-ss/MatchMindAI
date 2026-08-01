@@ -50,7 +50,7 @@ st.markdown(f"""
     /* Reduce Top Padding */
     .block-container {{
         padding-top: 0.8rem !important;
-        padding-bottom: 2rem !important;
+        padding-bottom: 7rem !important;
         max-width: 1400px !important;
     }}
 
@@ -189,11 +189,13 @@ st.markdown(f"""
         font-size: 1.05rem !important;
         line-height: 1.65 !important;
     }}
+    
+    /* ALWAYS VISIBLE STICKY CHAT INPUT BOX */
     [data-testid="stChatInput"] {{
         background-color: #0b0f19 !important;
         border: 2px solid #10b981 !important;
-        border-radius: 14px !important;
-        box-shadow: 0 4px 25px rgba(16, 185, 129, 0.4) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(16, 185, 129, 0.5) !important;
     }}
     [data-testid="stChatInput"] textarea, [data-testid="stChatInput"] input {{
         background-color: #0b0f19 !important;
@@ -416,6 +418,7 @@ with tab1:
             "content": answer,
             "web_sources": live_web_data
         })
+        st.rerun()
 
 
 # ==========================================
