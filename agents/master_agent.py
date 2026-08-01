@@ -168,7 +168,7 @@ def format_direct_answer(user_query, live_web_data):
     all_year_match = re.search(r'\b(19\d\d|20\d\d)\b', q_lower)
     if all_year_match:
         y_val = int(all_year_match.group(1))
-        if y_val < 2008 and any(k in q_lower for k in ["orange cap", "purple cap", "ipl", "trophy", "champion", "winner"]):
+        if y_val < 2008 and any(k in q_lower for k in ["orange cap", "purple cap", "ipl", "trophy", "champion", "winner", "winners"]):
             return f"⚠️ **IPL History Note**: The Indian Premier League (IPL) was founded in **2008**. There was no IPL or Orange Cap in **{y_val}**. The inaugural IPL season took place in 2008, where **Shaun Marsh** won the first-ever Orange Cap!"
 
     year_match = re.search(r'\b(200[89]|201[0-9]|202[0-6])\b', q_lower)
@@ -191,10 +191,12 @@ def format_direct_answer(user_query, live_web_data):
             return "💜 **IPL Purple Cap**: Awarded to the leading wicket-taker of the IPL season. Recent winners: **Prasidh Krishna (2025 - 25 wickets)** and **Harshal Patel (2024 - 24 wickets)**."
 
     # 3. IPL Winner / Champions Queries
-    if "who won" in q_lower or "winner" in q_lower or "champion" in q_lower:
+    if any(k in q_lower for k in ["who won", "winner", "winners", "champion", "champions", "trophy", "title"]):
         if year and year in IPL_CHAMPIONS:
             champ = IPL_CHAMPIONS[year]
             return f"🏆 **IPL {year} Champions**: **{champ}** won the IPL {year} title!"
+        elif "2025" in q_lower:
+            return "🏆 **IPL 2025 Champions**: **Royal Challengers Bengaluru (RCB)** won the IPL 2025 title!"
 
     # 4. Player Queries
     if "virat" in q_lower or "kohli" in q_lower:
@@ -227,13 +229,13 @@ def format_direct_answer(user_query, live_web_data):
 def answer_user_chatbot_query(user_query, chat_history=None):
     """
     Smart Conversational Intent Router:
-    Handles Bot Identity, Introductions, Greetings, Pre-2008 IPL Checks, and Real-Time Sports/Cricket Queries.
+    Handles Bot Identity, Introductions, Greetings, Pre-2008 IPL Checks, Historical IPL Winners & Stats.
     """
     clean_query = user_query.strip().lower()
     
     # 0. Check for Pre-2008 Invalid IPL Queries (e.g., 2005, 2007)
     pre_2008_match = re.search(r'\b(19\d\d|200[0-7])\b', clean_query)
-    if pre_2008_match and any(k in clean_query for k in ["orange cap", "purple cap", "ipl", "trophy", "champion", "winner"]):
+    if pre_2008_match and any(k in clean_query for k in ["orange cap", "purple cap", "ipl", "trophy", "champion", "winner", "winners"]):
         invalid_year = pre_2008_match.group(1)
         return f"⚠️ **IPL History Note**: The Indian Premier League (IPL) was founded in **2008**. There was no IPL or Orange Cap in **{invalid_year}**. The inaugural IPL season was held in 2008, where **Shaun Marsh** won the first-ever Orange Cap!", "Pre-2008 IPL Check Triggered"
 
@@ -279,7 +281,11 @@ How can I help you today? You can ask me:
 """
         return greeting_reply, "Casual Greeting System Triggered"
 
-    # 4. Sports & Match Query Engine
+    # 4. Direct Factual IPL History Router (Orange Cap, Purple Cap, Winners, Champions)
+    if any(k in clean_query for k in ["orange cap", "purple cap", "winner", "winners", "champion", "champions", "who won", "trophy"]):
+        return format_direct_answer(user_query, ""), "Direct IPL Factual Engine Triggered"
+
+    # 5. Sports & Match Query Engine
     print(f"Fetching live search data for user prompt: '{user_query}'...")
     live_web_data = search_general_query(user_query)
     
@@ -300,13 +306,12 @@ Instructions:
     )
     
     # Fallback Check: If LLM returned generic fallback template, raw source snippets, or general default, use format_direct_answer!
-    if "Based on real-time web intelligence" in answer or "Source [" in answer or "Recent winners include" in answer or "Final AI Verdict" in answer:
+    if "Based on real-time web intelligence" in answer or "Source [" in answer or "Recent winners include" in answer or "Final AI Verdict" in answer or "Strategic Match Analysis" in answer or "Team 1" in answer or "Executive Winner Summary" in answer:
         answer = format_direct_answer(user_query, live_web_data)
     
     return answer, live_web_data
 
 
 if __name__ == "__main__":
-    print("Testing MatchMindAi Bot Identity...")
-    ans, _ = answer_user_chatbot_query("What is your name")
-    print(ans)
+    ans, _ = answer_user_chatbot_query("Ipl 2025 winners")
+    print("Test Answer:", ans)
