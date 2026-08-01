@@ -8,42 +8,17 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit.components.v1 as components
 
-# Ensure agents directory is in Python path
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "agents"))
+# Absolute path configuration for Streamlit Cloud & local execution
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+AGENTS_DIR = os.path.join(BASE_DIR, "agents")
+if AGENTS_DIR not in sys.path:
+    sys.path.insert(0, AGENTS_DIR)
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
 
-# Default Fallback Dictionaries
-DEFAULT_TEAM_RATINGS = {
-    "Chennai Super Kings": 88,
-    "Mumbai Indians": 87,
-    "Royal Challengers Bengaluru": 85,
-    "Kolkata Knight Riders": 86,
-    "Gujarat Titans": 84,
-    "Rajasthan Royals": 85,
-    "Sunrisers Hyderabad": 84,
-    "Delhi Capitals": 82,
-    "Punjab Kings": 81,
-    "Lucknow Super Giants": 83
-}
-
-DEFAULT_VENUE_PROFILES = {
-    "Wankhede Stadium": {"avg_score": 172, "dew_factor": 0.12},
-    "M. Chinnaswamy Stadium": {"avg_score": 180, "dew_factor": 0.15},
-    "MA Chidambaram Stadium": {"avg_score": 158, "dew_factor": 0.05},
-    "Eden Gardens": {"avg_score": 168, "dew_factor": 0.10},
-    "Narendra Modi Stadium": {"avg_score": 175, "dew_factor": 0.08}
-}
-
-try:
-    from master_agent import predict_full_match_agentic, answer_user_chatbot_query
-    from monte_carlo_agent import TEAM_RATINGS, VENUE_PROFILES
-    from web_search_agent import search_realtime
-except Exception as e:
-    TEAM_RATINGS = DEFAULT_TEAM_RATINGS
-    VENUE_PROFILES = DEFAULT_VENUE_PROFILES
-    try:
-        from web_search_agent import search_realtime
-    except Exception:
-        def search_realtime(q, max_results=5): return []
+from master_agent import predict_full_match_agentic, answer_user_chatbot_query
+from monte_carlo_agent import TEAM_RATINGS, VENUE_PROFILES
+from web_search_agent import search_realtime
 
 # Page Configuration
 st.set_page_config(
@@ -54,7 +29,7 @@ st.set_page_config(
 )
 
 # Convert Stadium Image to Base64
-stadium_img_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "stadium.jpg")
+stadium_img_path = os.path.join(BASE_DIR, "stadium.jpg")
 stadium_b64 = ""
 if os.path.exists(stadium_img_path):
     with open(stadium_img_path, "rb") as img_file:
