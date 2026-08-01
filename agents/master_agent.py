@@ -190,13 +190,15 @@ def format_direct_answer(user_query, live_web_data):
         else:
             return "💜 **IPL Purple Cap**: Awarded to the leading wicket-taker of the IPL season. Recent winners: **Prasidh Krishna (2025 - 25 wickets)** and **Harshal Patel (2024 - 24 wickets)**."
 
-    # 3. IPL Winner / Champions Queries
+    # 3. IPL Winner / Champions Queries for ANY Year (2008 to 2026)
     if any(k in q_lower for k in ["who won", "winner", "winners", "champion", "champions", "trophy", "title"]):
         if year and year in IPL_CHAMPIONS:
             champ = IPL_CHAMPIONS[year]
             return f"🏆 **IPL {year} Champions**: **{champ}** won the IPL {year} title!"
-        elif "2025" in q_lower:
-            return "🏆 **IPL 2025 Champions**: **Royal Challengers Bengaluru (RCB)** won the IPL 2025 title!"
+        else:
+            # Return complete historical breakdown from 2008 to 2025 if no specific year mentioned
+            breakdown = "\n".join([f"- **{y}**: {c}" for y, c in sorted(IPL_CHAMPIONS.items(), reverse=True)])
+            return f"🏆 **All IPL Winners (2008 – 2025)**:\n{breakdown}"
 
     # 4. Player Queries
     if "virat" in q_lower or "kohli" in q_lower:
@@ -229,7 +231,7 @@ def format_direct_answer(user_query, live_web_data):
 def answer_user_chatbot_query(user_query, chat_history=None):
     """
     Smart Conversational Intent Router:
-    Handles Bot Identity, Introductions, Greetings, Pre-2008 IPL Checks, Historical IPL Winners & Stats.
+    Handles Bot Identity, Introductions, Greetings, Pre-2008 IPL Checks, Historical IPL Winners & Stats for Any Year.
     """
     clean_query = user_query.strip().lower()
     
@@ -281,7 +283,7 @@ How can I help you today? You can ask me:
 """
         return greeting_reply, "Casual Greeting System Triggered"
 
-    # 4. Direct Factual IPL History Router (Orange Cap, Purple Cap, Winners, Champions)
+    # 4. Direct Factual IPL History Router for ANY Year (Orange Cap, Purple Cap, Winners, Champions)
     if any(k in clean_query for k in ["orange cap", "purple cap", "winner", "winners", "champion", "champions", "who won", "trophy"]):
         return format_direct_answer(user_query, ""), "Direct IPL Factual Engine Triggered"
 
@@ -313,5 +315,6 @@ Instructions:
 
 
 if __name__ == "__main__":
-    ans, _ = answer_user_chatbot_query("Ipl 2025 winners")
-    print("Test Answer:", ans)
+    for test_q in ["who won ipl in 2016", "2011 ipl winner", "2008 ipl winner", "2020 ipl winner", "who won purple cap in 2016"]:
+        ans, _ = answer_user_chatbot_query(test_q)
+        print(f"Query: '{test_q}' -> {ans}")
