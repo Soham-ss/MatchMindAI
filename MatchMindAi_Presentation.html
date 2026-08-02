@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MatchMindAi - Complete Project Presentation Deck</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --card-bg: #0b0f19;
+            --emerald: #10b981;
+            --emerald-light: #34d399;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a78bfa;
+            --accent-yellow: #fbbf24;
+            --text-main: #f8fafc;
+            --text-sub: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            padding: 40px 20px;
+            line-height: 1.65;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .print-btn {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            color: white;
+            font-weight: 800;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 30px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.8);
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(56, 189, 248, 0.2) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.5);
+            border-radius: 24px;
+            padding: 45px 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9);
+        }
+
+        .title {
+            font-size: 3.4rem;
+            font-weight: 900;
+            background: linear-gradient(90deg, #34d399 0%, #38bdf8 50%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .badge-bar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            color: var(--emerald-light);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        /* Slide Cards Layout */
+        .slide-deck {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .slide-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(11, 15, 25, 0.95) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.35);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+            page-break-inside: avoid;
+            position: relative;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: rgba(56, 189, 248, 0.18);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: var(--accent-blue);
+            font-weight: 800;
+            padding: 4px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        .slide-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--emerald-light);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1.5px solid rgba(16, 185, 129, 0.25);
+            padding-bottom: 12px;
+        }
+
+        .slide-content p {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            margin-top: 15px;
+        }
+
+        .grid-item {
+            background: rgba(3, 7, 18, 0.7);
+            border: 1.5px solid rgba(56, 189, 248, 0.25);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .grid-item-title {
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        .grid-item-desc {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+        }
+
+        .highlight-box {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--emerald);
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 1.05rem;
+        }
+
+        .challenge-box {
+            background: rgba(244, 63, 94, 0.08);
+            border-left: 4px solid #f43f5e;
+            padding: 18px 22px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+        }
+
+        .challenge-header {
+            color: #fb7185;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .solution-header {
+            color: var(--emerald-light);
+            font-weight: 800;
+            font-size: 1.05rem;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        .tech-pill {
+            display: inline-block;
+            background: rgba(167, 139, 250, 0.15);
+            border: 1px solid rgba(167, 139, 250, 0.4);
+            color: var(--accent-purple);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        ul.easy-list {
+            list-style-type: none;
+        }
+
+        ul.easy-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+
+        ul.easy-list li::before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+            top: 2px;
+        }
+
+        @media print {
+            .print-btn, .top-nav { display: none; }
+            body { background: white; color: black; padding: 0; }
+            .slide-card { border: 1px solid #ccc; background: white; color: black; margin-bottom: 30px; box-shadow: none; }
+            .title { -webkit-text-fill-color: black; }
+            .slide-title { color: #059669; border-bottom: 2px solid #059669; }
+            .grid-item { background: #f8fafc; border: 1px solid #ddd; color: black; }
+            .grid-item-title { color: #0284c7; }
+            .grid-item-desc { color: #334155; }
+            .highlight-box { background: #f0fdf4; border-left: 4px solid #16a34a; color: black; }
+            .challenge-box { background: #fff1f2; border-left: 4px solid #e11d48; color: black; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="top-nav">
+            <div>
+                <h3 style="color: var(--emerald-light); font-size: 1.4rem;">⚡ MatchMindAi</h3>
+                <p style="font-size: 0.85rem; color: var(--text-sub);">Complete Presentation Deck & Project Guide</p>
+            </div>
+            <button class="print-btn" onclick="window.print()">🖨️ Save as PDF / Print Slides</button>
+        </div>
+
+        <div class="header-banner">
+            <h1 class="title">MatchMindAi</h1>
+            <p class="subtitle">Real-Time Sports Intelligence & 10,000-Run Monte Carlo Match Prediction Engine</p>
+            <div class="badge-bar">
+                <span class="badge">🌐 Live Streamlit Web App</span>
+                <span class="badge">🤖 Multi-Agent AI System</span>
+                <span class="badge">📊 RandomForest ML Classifier</span>
+                <span class="badge">🏆 2008–2026 IPL History Engine</span>
+            </div>
+        </div>
+
+        <div class="slide-deck">
+
+            <!-- SLIDE 1 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 1 OF 10</span>
+                <h2 class="slide-title">📌 Slide 1: Introduction & Title Overview</h2>
+                <div class="slide-content">
+                    <p><strong>Project Name:</strong> MatchMindAi</p>
+                    <p><strong>Goal:</strong> To provide cricket fans, analysts, and sports enthusiasts with 100% accurate player facts, live stadium news, and 10,000-run ball-by-ball simulated match predictions.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>💡 Key Links:</strong><br>
+                        • <strong>Live App:</strong> <a href="https://matchmindai-t5mgmcv6r79nflpye5ykla.streamlit.app" style="color: var(--accent-blue);">matchmindai.streamlit.app</a><br>
+                        • <strong>GitHub Repo:</strong> <a href="https://github.com/Soham-ss/MatchMindAI" style="color: var(--accent-blue);">github.com/Soham-ss/MatchMindAI</a>
+                    </div>
+
+                    <p><strong>Tech Stack Used:</strong></p>
+                    <div>
+                        <span class="tech-pill">Python 3.14</span>
+                        <span class="tech-pill">Streamlit</span>
+                        <span class="tech-pill">Scikit-Learn</span>
+                        <span class="tech-pill">Plotly</span>
+                        <span class="tech-pill">NumPy</span>
+                        <span class="tech-pill">Pandas</span>
+                        <span class="tech-pill">BeautifulSoup4</span>
+                        <span class="tech-pill">HTML5/CSS3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 2 OF 10</span>
+                <h2 class="slide-title">❓ Slide 2: The Problem We Solved</h2>
+                <div class="slide-content">
+                    <p>Before <strong>MatchMindAi</strong>, existing sports prediction tools had major limitations:</p>
+                    
+                    <div class="feature-grid">
+                        <div class="grid-item">
+                            <div class="grid-item-title">❌ Static Historical Data Only</div>
+                            <div class="grid-item-desc">Old tools only look at static past statistics. They ignore today's live pitch reports, weather changes, or team squad updates.</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">❌ Messy Raw Data Dumps</div>
+                            <div class="grid-item-desc">General AI chatbots return messy raw URL links (e.g. <code>Source [1]...</code>) instead of simple, crisp 1-line answers.</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">❌ Lack of Match Simulation</div>
+                            <div class="grid-item-desc">Fans cannot simulate thousands of ball-by-ball match scenarios to see highest expected scores and score distribution ranges.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 3 OF 10</span>
+                <h2 class="slide-title">🚀 Slide 3: Our Solution (MatchMindAi)</h2>
+                <div class="slide-content">
+                    <p>We created a <strong>Multi-Agent AI Platform</strong> that solves all three problems at once:</p>
+                    
+                    <ul class="easy-list">
+                        <li><strong>10,000-Run Monte Carlo Simulation Engine:</strong> Simulates 10,000 ball-by-ball matches per click incorporating team ratings, venue pitch profiles, and stadium dew factors.</li>
+                        <li><strong>1-Line Direct Factual Answers:</strong> Instantly answers player team queries, Orange Cap winners, Purple Cap winners, and Champions for any year (2008–2026).</li>
+                        <li><strong>Real-Time Internet Web Intelligence:</strong> Scrapes live Google News RSS feeds to incorporate today's pitch and weather news.</li>
+                        <li><strong>High-Energy 4D Cyber UI:</strong> Dark cyberpunk theme, live stadium video header, and interactive 4D depth particle cursor radar.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SLIDE 4 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 4 OF 10</span>
+                <h2 class="slide-title">✨ Slide 4: Main Features & Capabilities</h2>
+                <div class="slide-content">
+                    <div class="feature-grid">
+                        <div class="grid-item">
+                            <div class="grid-item-title">💬 Smart AI Chatbot</div>
+                            <div class="grid-item-desc">Recognizes user introductions personally (e.g. <em>"Hi my name is Soham"</em> ➔ <em>"Hello Soham! 👋"</em>) and answers sports queries.</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">🏆 18-Year IPL Database</div>
+                            <div class="grid-item-desc">Maps every Orange Cap, Purple Cap, and Champion from 2008 to 2025. (e.g. <em>"who won orange cap in 2017"</em> ➔ David Warner, 641 runs).</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">⚠️ Pre-2008 Boundary Check</div>
+                            <div class="grid-item-desc">Detects invalid pre-2008 queries (e.g. <em>"who won in 2005"</em>) and explains IPL was founded in 2008 with Shaun Marsh winning the first Orange Cap.</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">⚡ 1-Click Match Predictor</div>
+                            <div class="grid-item-desc">Pick 2 teams and a stadium venue to run 10,000 simulations and generate win probability meters and score histogram graphs.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 5 OF 10</span>
+                <h2 class="slide-title">🏗️ Slide 5: System Architecture & Data Flow</h2>
+                <div class="slide-content">
+                    <p>Here is how data flows through <strong>MatchMindAi</strong> when a user asks a question or predicts a match:</p>
+                    
+                    <div class="highlight-box">
+                        <strong>1. User Prompt / Selection</strong> ➔ User types a query or selects two teams.<br>
+                        <strong>2. Smart Intent Router</strong> ➔ Checks if query is a greeting, identity question, IPL history lookup, or match prediction.<br>
+                        <strong>3. Parallel Sub-Agents Triggered:</strong><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• <em>Web Scraper Agent:</em> Scrapes live Google News for pitch & weather news.<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• <em>Monte Carlo Agent:</em> Simulates 10,000 ball-by-ball matches.<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;• <em>RandomForest ML Agent:</em> Queries trained machine learning model.<br>
+                        <strong>4. Ensemble Blend</strong> ➔ Combines 55% Monte Carlo + 45% ML to calculate final win probability.<br>
+                        <strong>5. Streamlit Cyber UI</strong> ➔ Renders win gauges, score graphs, and crisp markdown commentary.
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 6 OF 10</span>
+                <h2 class="slide-title">📊 Slide 6: Machine Learning & Simulation Details</h2>
+                <div class="slide-content">
+                    <ul class="easy-list">
+                        <li><strong>RandomForest ML Classifier:</strong> Trained on historical IPL datasets using <code>scikit-learn</code>. Pre-compiled weights are saved as <code>.pkl</code> binary files inside <code>models/</code>.</li>
+                        <li><strong>Stochastic Monte Carlo Math:</strong> Calculates run probabilities per ball based on team rating (CSK 88, MI 87, RCB 85) and venue dew factor (Wankhede 0.12, Chinnaswamy 0.15).</li>
+                        <li><strong>Interactive Plotly Graphs:</strong> Displays score distribution histograms showing the expected run ranges for both teams across 10,000 simulated matches.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SLIDE 7 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 7 OF 10</span>
+                <h2 class="slide-title">⚡ Slide 7: Challenges Faced & Solutions</h2>
+                <div class="slide-content">
+                    
+                    <div class="challenge-box">
+                        <div class="challenge-header">🔴 Challenge 1: GitHub 100 MB Limit Error</div>
+                        <p><strong>Problem:</strong> <code>git push</code> was blocked because <code>dataset/IPL.csv</code> was <strong>104.93 MB</strong>.</p>
+                        <div class="solution-header">✅ Solution:</div>
+                        <p>Removed <code>IPL.csv</code> from git history because model weights were already compiled into <code>.pkl</code> binary files inside <code>models/</code>.</p>
+                    </div>
+
+                    <div class="challenge-box">
+                        <div class="challenge-header">🔴 Challenge 2: Streamlit Cloud Import & Path Errors</div>
+                        <p><strong>Problem:</strong> Relative file paths like <code>"models/match_predictor.pkl"</code> crashed on Streamlit Cloud Linux servers.</p>
+                        <div class="solution-header">✅ Solution:</div>
+                        <p>Used Python's <code>os.path.abspath</code> to dynamically find exact absolute folder paths on Linux.</p>
+                    </div>
+
+                    <div class="challenge-box">
+                        <div class="challenge-header">🔴 Challenge 3: Natural Language Phrasing Variations</div>
+                        <p><strong>Problem:</strong> Typing <em>"who wins 2018 ipl"</em> (present tense) bypassed the router which only checked for <em>"who won"</em> (past tense).</p>
+                        <div class="solution-header">✅ Solution:</div>
+                        <p>Expanded regex keywords to catch all phrasing variations (<code>"who wins"</code>, <code>"wins"</code>, <code>"win"</code>, <code>"won"</code>, <code>"winner"</code>).</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SLIDE 8 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 8 OF 10</span>
+                <h2 class="slide-title">🎨 Slide 8: UI/UX & High-Energy Design System</h2>
+                <div class="slide-content">
+                    <ul class="easy-list">
+                        <li><strong>Cyberpunk Dark Aesthetics:</strong> Premium <code>#030712</code> background with HSL tailored emerald accents (<code>#10b981</code>, <code>#34d399</code>).</li>
+                        <li><strong>Modern Typography:</strong> Custom Google Font (<code>Outfit</code>) for clean legibility across laptops and mobile screens.</li>
+                        <li><strong>Dynamic Visual FX:</strong> Looping HD stadium lights video banner + interactive 4D particle cursor depth radar.</li>
+                        <li><strong>Sticky Bottom Chat Input:</strong> Pinned Chat Box stays permanently visible at the bottom of the screen when scrolling long chat responses.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SLIDE 9 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 9 OF 10</span>
+                <h2 class="slide-title">🌐 Slide 9: Cloud Deployment & Infrastructure</h2>
+                <div class="slide-content">
+                    <div class="feature-grid">
+                        <div class="grid-item">
+                            <div class="grid-item-title">☁️ Live Hosting</div>
+                            <div class="grid-item-desc">Deployed live on <strong>Streamlit Community Cloud</strong> with zero downtime. Accessible globally at <a href="https://matchmindai-t5mgmcv6r79nflpye5ykla.streamlit.app" style="color:var(--accent-blue);">matchmindai.streamlit.app</a>.</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">📦 Source Control</div>
+                            <div class="grid-item-desc">Version-controlled on <strong>GitHub</strong> (<a href="https://github.com/Soham-ss/MatchMindAI" style="color:var(--accent-blue);">Soham-ss/MatchMindAI</a>).</div>
+                        </div>
+
+                        <div class="grid-item">
+                            <div class="grid-item-title">🔄 Automated CI/CD</div>
+                            <div class="grid-item-desc">Pushing code updates to GitHub main branch automatically triggers a rebuild on Streamlit Cloud within ~30 seconds.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 10 -->
+            <div class="slide-card">
+                <span class="slide-number">SLIDE 10 OF 10</span>
+                <h2 class="slide-title">🔮 Slide 10: Conclusion & Future Scope</h2>
+                <div class="slide-content">
+                    <p><strong>Conclusion:</strong> <strong>MatchMindAi</strong> successfully combines artificial intelligence, machine learning, Monte Carlo simulations, and real-time internet scraping into a fast, accurate, and stunning web platform.</p>
+                    
+                    <div class="highlight-box">
+                        <strong>🚀 Future Roadmap:</strong><br>
+                        • <strong>Live Ball-by-Ball Score API:</strong> Connect live cricket APIs for real-time win probability shifts during active matches.<br>
+                        • <strong>Fantasy Team Optimizer:</strong> Auto-generate optimal Dream11 / My11Circle lineups based on Monte Carlo expected points.<br>
+                        • <strong>Multi-Sport Expansion:</strong> Extend simulation models to Football (Premier League, UEFA Champions League) and Basketball (NBA).
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+</html>
